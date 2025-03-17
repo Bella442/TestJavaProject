@@ -1,27 +1,28 @@
 package com.example.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Setter
 @Getter
-@Component
+@Entity
+@Table(name = "users")
 public class User {
-    private int id;
-    private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
     private String position;
     private String role;
-    private int salary;
+    private Integer salary;
 
     public User() {
     }
-//    public User(int id, String name, String position, String role, int salary) {
-//        this.id = id;
-//        this.name = name;
-//        this.position = position;
-//        this.role = role;
-//        this.salary = salary;
-//    }
 
 }
