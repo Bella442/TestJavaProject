@@ -1,10 +1,8 @@
 package com.example.repository;
 
 import com.example.model.User;
-import jakarta.annotation.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,8 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @NonNull
     Optional<User> findById(@NonNull Long id);  // Assuming Long as the primary key type
-
-    User findByEmail(String email);
 
     @NonNull
     List<User> findAll();
