@@ -33,7 +33,7 @@ public class AuthenticationService extends BaseUserService{
         User user = new User(input.getEmail(), passwordEncoder.encode(input.getPassword()),
                 input.getFirstName(), input.getLastName());
 
-        return userMapper.mapUserToRegisterUserResponseDto(userRepository.save(user));
+        return userMapper.mapUserToUserResponseDto(userRepository.save(user));
     }
 
     public User authenticate(LoginUserDto input) {

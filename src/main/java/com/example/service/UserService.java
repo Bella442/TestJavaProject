@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.UserDto;
+import com.example.dto.UserResponseDto;
 import com.example.entity.User;
 import com.example.mapper.UserMapper;
 import com.example.repository.UserRepository;
@@ -16,34 +17,36 @@ import java.util.UUID;
 
 public class UserService extends BaseUserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         super(userRepository);
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public User getUserByEmail(String email) throws EntityNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(
+    public UserResponseDto getUserByEmail(String email) throws EntityNotFoundException {
+        return userMapper.mapUserToUserResponseDto(userRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("User not found with email: " + email)
-        );
+        ));
     }
 
-    public User createUser(UserDto userDto) throws IllegalArgumentException {
-        UserMapper userMapper = new UserMapper();
+    public UserResponseDto createUser(UserDto userDto) throws IllegalArgumentException {
         if (userExists(userDto.getEmail())) {
             throw new IllegalArgumentException("User with this email already exists.");
         }
-        return userRepository.save(userMapper.mapUserDtoToUserEntity(userDto));
+        User savedUser = userRepository.save(userMapper.mapUserDtoToUserEntity(userDto));
+        return userMapper.mapUserToUserResponseDto(savedUser);
     }
 
-    public User editUser(UUID id, UserDto user) throws EntityNotFoundException {
+    public UserResponseDto editUser(UUID id, UserDto user) throws EntityNotFoundException {
         return userRepository.findById(id).map(existingUser -> {
             BeanUtils.copyProperties(user, existingUser, UtilFunctions.getNullPropertyNames(user));
-            return userRepository.save(existingUser);
+            return userMapper.mapUserToUserResponseDto(userRepository.save(existingUser));
         }).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.UserDto;
+import com.example.dto.UserResponseDto;
 import com.example.entity.User;
 import com.example.service.UserService;
 import com.example.validation.OnCreate;
@@ -26,17 +27,17 @@ public class UserController {
     }
 
     @GetMapping("/{email}")
-    public User getUserByEmail(@PathVariable String email) throws EntityNotFoundException {
+    public UserResponseDto getUserByEmail(@PathVariable String email) throws EntityNotFoundException {
         return userService.getUserByEmail(email);
     }
 
     @PostMapping
-    public User createUser(@Validated({OnCreate.class, Default.class}) @RequestBody UserDto user) throws IllegalArgumentException {
+    public UserResponseDto createUser(@Validated({OnCreate.class, Default.class}) @RequestBody UserDto user) throws IllegalArgumentException {
         return userService.createUser(user);
     }
 
     @PatchMapping("/{id}")
-    public User editUser(@PathVariable UUID id, @Validated({OnUpdate.class, Default.class}) @RequestBody UserDto user) throws EntityNotFoundException {
+    public UserResponseDto editUser(@PathVariable UUID id, @Validated({OnUpdate.class, Default.class}) @RequestBody UserDto user) throws EntityNotFoundException {
         return userService.editUser(id, user);
     }
 

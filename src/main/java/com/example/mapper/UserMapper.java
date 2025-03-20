@@ -21,12 +21,14 @@ public class UserMapper {
         return user;
     }
 
-    public UserResponseDto mapUserToRegisterUserResponseDto(User user) {
+    public UserResponseDto mapUserToUserResponseDto(User user) {
         UserResponseDto userDto = new UserResponseDto();
 
         userDto.setEmail(user.getEmail());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
+        userDto.setPosition(user.getPosition());
+        userDto.setRole(user.getRole());
 
         return userDto;
     }

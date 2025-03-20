@@ -2,8 +2,7 @@ package com.example.dto;
 
 import com.example.util.ValidationMessages;
 import com.example.validation.OnCreate;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,8 +14,7 @@ public class UserDto extends RegisterUserDto {
 
     private String role = "user";
 
-    @Valid
-    @NotBlank(message = ValidationMessages.FIELD_REQUIRED, groups = OnCreate.class)
+    @NotNull(message = ValidationMessages.FIELD_REQUIRED, groups = OnCreate.class)
     private Integer salary;
 
 }
