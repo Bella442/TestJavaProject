@@ -2,11 +2,9 @@ package com.example.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
-@RequiredArgsConstructor
 @Table(name = "products")
 public class Product {
     @Id
@@ -15,17 +13,17 @@ public class Product {
     private Long id;
 
     @Column(name = "name")
-    private String name;
+    private final String name;
 
     @Column(name = "description")
-    private String description;
+    private final String description;
 
     @Column(name = "price")
-    private double price;
+    private final double price;
 
-    public Product(String name, String description, double price) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
+//    public Product(String name, String description, double price) {
+//        this.name = name;
+//        this.description = description;
+//        this.price = price;
+//    }
 }
