@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,8 @@ public class User implements UserDetails {
 
     @Column(name = "role")
     @ColumnDefault(value = "user")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 
     @Column(name = "salary")
     private Integer salary;

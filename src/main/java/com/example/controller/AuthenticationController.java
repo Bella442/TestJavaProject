@@ -2,7 +2,7 @@ package com.example.controller;
 
 import com.example.dto.LoginResponseDto;
 import com.example.dto.LoginUserDto;
-import com.example.dto.RegisterUserDto;
+import com.example.dto.BaseUserDto;
 import com.example.dto.UserResponseDto;
 import com.example.entity.User;
 import com.example.service.AuthenticationService;
@@ -23,8 +23,8 @@ public class AuthenticationController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
-        UserResponseDto registeredUser = authenticationService.signup(registerUserDto);
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody BaseUserDto baseUserDto) {
+        UserResponseDto registeredUser = authenticationService.signup(baseUserDto);
 
         return ResponseEntity.ok(registeredUser);
     }

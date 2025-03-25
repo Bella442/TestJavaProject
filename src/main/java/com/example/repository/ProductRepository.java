@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @NonNull
     List<Product> findAll();
 
+    List<Product> findByIdIn(List<Integer> productIds);
+
     @NonNull
-    Optional<Product> findById(@NonNull Long id);
+    Optional<Product> findById(@NonNull int id);
 
     @NonNull
     Optional<Product> findByName(@NonNull String name);
@@ -23,5 +25,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @NonNull
     Product save(@NonNull Product product);
 
-    void deleteById(@NonNull Long id);
+    void deleteById(@NonNull int id);
 }

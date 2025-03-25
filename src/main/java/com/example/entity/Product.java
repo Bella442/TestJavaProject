@@ -2,28 +2,30 @@ package com.example.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private int id;
 
     @Column(name = "name")
-    private final String name;
+    private String name;
 
     @Column(name = "description")
-    private final String description;
+    private String description;
 
     @Column(name = "price")
-    private final double price;
+    private double price;
 
-//    public Product(String name, String description, double price) {
-//        this.name = name;
-//        this.description = description;
-//        this.price = price;
-//    }
+    public Product(String name, String description, double price) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
 }

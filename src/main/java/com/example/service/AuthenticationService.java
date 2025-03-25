@@ -1,7 +1,7 @@
 package com.example.service;
 
 import com.example.dto.LoginUserDto;
-import com.example.dto.RegisterUserDto;
+import com.example.dto.BaseUserDto;
 import com.example.dto.UserResponseDto;
 import com.example.entity.User;
 import com.example.mapper.UserMapper;
@@ -26,7 +26,7 @@ public class AuthenticationService extends BaseUserService{
         this.userMapper = userMapper;
     }
 
-    public UserResponseDto signup(RegisterUserDto input) {
+    public UserResponseDto signup(BaseUserDto input) {
         if (userExists(input.getEmail())) {
             throw new IllegalArgumentException("User with this email already exists.");
         }

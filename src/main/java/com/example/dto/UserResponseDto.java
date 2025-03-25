@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.example.enums.RoleType;
 import lombok.Data;
 
 @Data
@@ -8,5 +9,5 @@ public class UserResponseDto {
     private String firstName;
     private String lastName;
     private String position;
-    private String role;
+    private RoleType role;
 }

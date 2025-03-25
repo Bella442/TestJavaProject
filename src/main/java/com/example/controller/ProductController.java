@@ -8,6 +8,7 @@ import com.example.validation.OnUpdate;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,23 +26,26 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) throws EntityNotFoundException {
+    public Product getProductById(@PathVariable int id) throws EntityNotFoundException {
         return productService.getProductById(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Product addProduct(@Validated({OnCreate.class, Default.class}) @RequestBody ProductDto product) throws IllegalArgumentException {
         return productService.createProduct(product);
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @Validated({OnUpdate.class, Default.class})
+    @PreAuthorize("hasRole('ADMIN')")
+    public Product updateProduct(@PathVariable int id, @Validated({OnUpdate.class, Default.class})
     @RequestBody ProductDto updatedProduct) throws EntityNotFoundException {
         return productService.updateProduct(id, updatedProduct);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable Long id) throws EntityNotFoundException {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteProductById(@PathVariable int id) throws EntityNotFoundException {
         productService.deleteProductById(id);
     }
 }

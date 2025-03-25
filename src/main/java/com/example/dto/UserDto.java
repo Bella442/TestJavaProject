@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.example.enums.RoleType;
 import com.example.util.ValidationMessages;
 import com.example.validation.OnCreate;
 import jakarta.validation.constraints.NotNull;
@@ -8,11 +9,11 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserDto extends RegisterUserDto {
+public class UserDto extends BaseUserDto {
 
     private String position = "employee";
 
-    private String role = "user";
+    private RoleType role = RoleType.ROLE_USER;
 
     @NotNull(message = ValidationMessages.FIELD_REQUIRED, groups = OnCreate.class)
     private Integer salary;

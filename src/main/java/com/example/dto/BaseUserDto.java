@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class RegisterUserDto {
+public class BaseUserDto {
 
     @NotBlank(message = ValidationMessages.FIELD_REQUIRED, groups = OnCreate.class)
     @Email(message = "Should be a valid email address")
