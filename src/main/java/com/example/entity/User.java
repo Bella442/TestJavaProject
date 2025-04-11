@@ -2,9 +2,9 @@ package com.example.entity;
 
 import com.example.enums.RoleType;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -38,10 +38,9 @@ public class User implements UserDetails {
     @Column(name = "position")
     private String position;
 
-    @Column(name = "role")
-    @ColumnDefault(value = "user")
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleType role;
+    private RoleType role = RoleType.ROLE_USER;
 
     @Column(name = "salary")
     private Integer salary;

@@ -13,7 +13,7 @@ public class UserDto extends BaseUserDto {
 
     private String position = "employee";
 
-    private RoleType role = RoleType.ROLE_USER;
+    private RoleType role;
 
     @NotNull(message = ValidationMessages.FIELD_REQUIRED, groups = OnCreate.class)
     private Integer salary;

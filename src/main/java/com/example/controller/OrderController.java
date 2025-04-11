@@ -34,7 +34,7 @@ public class OrderController {
         return orderService.editOrderProducts(id, orderDto.getProductIds());
     }
 
-    @PatchMapping("/{id}/{status}")
+    @PatchMapping("/status/{id}")
     public OrderResponseDto updateOrderStatus(@PathVariable int id, @RequestBody UpdateStatusDto statusDto) {
         return orderService.updateOrderStatus(id, statusDto.status());
     }

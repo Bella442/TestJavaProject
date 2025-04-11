@@ -1,5 +1,6 @@
 package com.example.configs;
 
+import com.example.enums.RoleType;
 import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,7 +32,8 @@ public class ApplicationConfiguration {
             return new User(
                     user.getEmail(),  // Use email as the username
                     user.getPassword(),  // Store encoded password
-                    Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()))  // Assign role
+                    Collections.singletonList(new SimpleGrantedAuthority(
+                            Optional.of(user.getRole().name()).orElse(RoleType.ROLE_USER.name())) ) // Assign role
             );
         };
     }
