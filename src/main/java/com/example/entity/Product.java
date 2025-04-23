@@ -1,11 +1,13 @@
 package com.example.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "products")
 public class Product {

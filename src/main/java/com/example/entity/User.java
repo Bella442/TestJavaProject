@@ -2,9 +2,7 @@ package com.example.entity;
 
 import com.example.enums.RoleType;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,7 +12,10 @@ import java.util.UUID;
 
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
