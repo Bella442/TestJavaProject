@@ -15,7 +15,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {

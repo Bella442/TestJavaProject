@@ -1,6 +1,6 @@
 package com.example.dto;
 
-import com.example.entity.Product;
+import com.example.enums.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 
@@ -15,7 +15,7 @@ public class OrderResponseDto {
     private UserResponseDto customer;
 
     @JsonProperty(value = "products")
-    private List<Product> products;
+    private List<OrderItemDto> orderItems;
 
     @JsonProperty(value = "totalPrice")
     private double totalPrice;
@@ -24,5 +24,5 @@ public class OrderResponseDto {
     private Date orderDate;
 
     @JsonProperty(value = "status")
-    private String status;
+    private StatusEnum status;
 }

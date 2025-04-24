@@ -15,6 +15,6 @@ public class OrderDto {
     private UUID userId;
 
     @NotEmpty(message = ValidationMessages.FIELD_REQUIRED)
-    private List<Integer> productIds;
+    private List<OrderItemDto> orderItems;
 
 }

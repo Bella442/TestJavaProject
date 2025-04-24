@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,19 +22,16 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_products",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Product> products;
+    private List<OrderItem> orderItems;
 
     private double totalPrice;
 
-    private final Date orderDate = new Date();
+    private boolean isPaid = false;
 
-    private String status = "PENDING";
+    private final Date orderDate = new Date();
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status = StatusEnum.PENDING;
 
 }
