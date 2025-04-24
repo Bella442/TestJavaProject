@@ -10,6 +10,6 @@ public class ExceptionResponse {
     private String errorMessage;
 
     @JsonProperty(value = "code")
-    private int code;
+    private Integer code;
 
 }

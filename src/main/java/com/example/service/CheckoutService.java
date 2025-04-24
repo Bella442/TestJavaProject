@@ -12,7 +12,7 @@ public class CheckoutService {
     private final OrderService orderService;
     private final OrderRepository orderRepository;
 
-    public void checkoutOrder(int orderId, double amount) throws IllegalArgumentException {
+    public void checkoutOrder(Integer orderId, double amount) throws IllegalArgumentException {
         Order order = orderService.getOrderById((orderId));
         if (amount < order.getTotalPrice()) {
             throw new IllegalArgumentException("Amount is less than the total price of the order.");

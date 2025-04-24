@@ -20,7 +20,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(int id) throws EntityNotFoundException {
+    public Product getProductById(Integer id) throws EntityNotFoundException {
         return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
     }
 
@@ -32,14 +32,14 @@ public class ProductService {
         return productRepository.save(productEntity);
     }
 
-    public Product updateProduct(int id, ProductDto updatedProduct) throws EntityNotFoundException {
+    public Product updateProduct(Integer id, ProductDto updatedProduct) throws EntityNotFoundException {
         return productRepository.findById(id).map(existing -> {
             BeanUtils.copyProperties(updatedProduct, existing, UtilFunctions.getNullPropertyNames(updatedProduct));
             return productRepository.save(existing);
         }).orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
     }
 
-    public void deleteProductById(int id) throws EntityNotFoundException {
+    public void deleteProductById(Integer id) throws EntityNotFoundException {
         productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
         productRepository.deleteById(id);
     }

@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderResponseDto {
     @JsonProperty(value = "orderId")
-    private int orderId;
+    private Integer orderId;
 
     @JsonProperty(value = "customer")
     private UserResponseDto customer;

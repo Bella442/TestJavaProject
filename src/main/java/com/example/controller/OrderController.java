@@ -30,17 +30,17 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}")
-    public OrderResponseDto editOrderProducts(@PathVariable int id, @Validated({OnUpdate.class, Default.class}) @RequestBody OrderDto orderDto) {
+    public OrderResponseDto editOrderProducts(@PathVariable Integer id, @Validated({OnUpdate.class, Default.class}) @RequestBody OrderDto orderDto) {
         return orderService.editOrderProducts(id, orderDto.getOrderItems());
     }
 
     @PatchMapping("/status/{id}")
-    public OrderResponseDto updateOrderStatus(@PathVariable int id, @RequestBody UpdateStatusDto statusDto) {
+    public OrderResponseDto updateOrderStatus(@PathVariable Integer id, @RequestBody UpdateStatusDto statusDto) {
         return orderService.updateOrderStatus(id, statusDto.status());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable int id) {
+    public void deleteOrder(@PathVariable Integer id) {
         orderService.deleteOrder(id);
     }
 }

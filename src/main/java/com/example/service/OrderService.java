@@ -3,10 +3,7 @@ package com.example.service;
 import com.example.dto.OrderDto;
 import com.example.dto.OrderItemDto;
 import com.example.dto.OrderResponseDto;
-import com.example.entity.Order;
-import com.example.entity.OrderItem;
-import com.example.entity.Product;
-import com.example.entity.User;
+import com.example.entity.*;
 import com.example.enums.StatusEnum;
 import com.example.mapper.UserMapper;
 import com.example.repository.OrderRepository;
@@ -19,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +27,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final InventoryService inventoryService;
 
     public List<OrderResponseDto> getAllOrders() {
         return mapOrdersListToOrderResponseDtoList(orderRepository.findAll());
@@ -44,6 +43,13 @@ public class OrderService {
         User user = userRepository.findById(orderDto.getUserId()).orElseThrow(() ->
                 new EntityNotFoundException("User not found with id: " + orderDto.getUserId()));
         List<Product> products = getProducts(orderDto.getOrderItems().stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
+        List<OrderItemDto> unavailableProducts = checkAllProductsAvailable(orderDto.getOrderItems());
+        if (!unavailableProducts.isEmpty()) {
+            throw new IllegalArgumentException("The following products are not available: " +
+                    unavailableProducts.stream().map(item -> item.getProductId().toString()).collect(Collectors.joining(", ")) +
+                    ". Please remove them from the order to proceed.");
+        }
+
         Order orderEntity = new Order();
 
         List<OrderItem> orderItems = mapOrderItemDtosListToOrderItemList(orderDto.getOrderItems(), orderEntity, products);
@@ -55,7 +61,7 @@ public class OrderService {
         return mapOrderToOrderResponseDto(orderRepository.save(orderEntity));
     }
 
-    public OrderResponseDto editOrderProducts(int orderId, List<OrderItemDto> orderItemDtos) {
+    public OrderResponseDto editOrderProducts(Integer orderId, List<OrderItemDto> orderItemDtos) {
         List<Product> products = getProducts(orderItemDtos.stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
 
         Order orderEntity = orderRepository.findById(orderId).map(existing -> {
@@ -67,12 +73,12 @@ public class OrderService {
         return mapOrderToOrderResponseDto(orderEntity);
     }
 
-    public void deleteOrder(int orderId) {
+    public void deleteOrder(Integer orderId) {
         Order order = getOrderById(orderId);
         orderRepository.delete(order);
     }
 
-    public Order getOrderById(int orderId) {
+    public Order getOrderById(Integer orderId) {
         return orderRepository.findById(orderId).orElseThrow(() ->
                 new EntityNotFoundException("Order not found with id: " + orderId));
     }
@@ -82,7 +88,7 @@ public class OrderService {
                 orderItem.getProduct().getPrice() * orderItem.getQuantity()).sum(), 2);
     }
 
-    public OrderResponseDto updateOrderStatus(int orderId, StatusEnum newStatus) {
+    public OrderResponseDto updateOrderStatus(Integer orderId, StatusEnum newStatus) {
         Order order = orderRepository.findById(orderId).map(existing -> {
             if (existing.getStatus().equals(StatusEnum.COMPLETED)) {
                 return null;
@@ -110,7 +116,7 @@ public class OrderService {
         return orderItems.stream().map(orderItemDto -> {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(products.stream().filter(product -> product.getId() == orderItemDto.getProductId()).findFirst().orElse(null));
+            orderItem.setProduct(products.stream().filter(product -> Objects.equals(product.getId(), orderItemDto.getProductId())).findFirst().orElse(null));
             orderItem.setQuantity(orderItemDto.getQuantity());
             return orderItem;
         }).collect(Collectors.toList());
@@ -119,5 +125,13 @@ public class OrderService {
     public List<OrderItemDto> mapOrderItemsToOrderItemDto(List<OrderItem> orderItems) {
         return orderItems.stream().map(orderItem -> new OrderItemDto(orderItem.getProduct().getId(), orderItem.getQuantity()))
                 .collect(Collectors.toList());
+    }
+
+    public List<OrderItemDto> checkAllProductsAvailable(List<OrderItemDto> orderItems) {
+        List<Inventory> inventory = inventoryService.getAvailability(orderItems.stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
+        return orderItems.stream().filter(item -> {
+            Inventory current = inventory.stream().filter(inv -> Objects.equals(inv.getProduct().getId(), item.getProductId())).findFirst().orElse(null);
+            return  current == null || current.getQuantity() < item.getQuantity();
+        }).collect(Collectors.toList());
     }
 }

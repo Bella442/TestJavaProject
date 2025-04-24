@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
 
     }
 
-    private ExceptionResponse createExceptionResponse(int statusCode, String message) {
+    private ExceptionResponse createExceptionResponse(Integer statusCode, String message) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
         exceptionResponse.setCode(statusCode);
         exceptionResponse.setErrorMessage(message);

@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findByIdIn(List<Integer> productIds);
 
     @NonNull
-    Optional<Product> findById(@NonNull int id);
+    Optional<Product> findById(@NonNull Integer id);
 
     @NonNull
     Optional<Product> findByName(@NonNull String name);
@@ -25,5 +25,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @NonNull
     Product save(@NonNull Product product);
 
-    void deleteById(@NonNull int id);
+    void deleteById(@NonNull Integer id);
 }

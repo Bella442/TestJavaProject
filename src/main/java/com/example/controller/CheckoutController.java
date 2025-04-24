@@ -13,7 +13,7 @@ public class CheckoutController {
     private final CheckoutService checkoutService;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> checkoutOrder(@RequestParam int orderId, @RequestParam double amount) throws IllegalArgumentException {
+    public ResponseEntity<HttpStatus> checkoutOrder(@RequestParam Integer orderId, @RequestParam double amount) throws IllegalArgumentException {
         checkoutService.checkoutOrder(orderId, amount);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable int id) throws EntityNotFoundException {
+    public Product getProductById(@PathVariable Integer id) throws EntityNotFoundException {
         return productService.getProductById(id);
     }
 
@@ -38,14 +38,14 @@ public class ProductController {
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Product updateProduct(@PathVariable int id, @Validated({OnUpdate.class, Default.class})
+    public Product updateProduct(@PathVariable Integer id, @Validated({OnUpdate.class, Default.class})
     @RequestBody ProductDto updatedProduct) throws EntityNotFoundException {
         return productService.updateProduct(id, updatedProduct);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteProductById(@PathVariable int id) throws EntityNotFoundException {
+    public void deleteProductById(@PathVariable Integer id) throws EntityNotFoundException {
         productService.deleteProductById(id);
     }
 }
