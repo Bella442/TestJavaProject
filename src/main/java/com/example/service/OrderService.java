@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,12 +44,7 @@ public class OrderService {
         User user = userRepository.findById(orderDto.getUserId()).orElseThrow(() ->
                 new EntityNotFoundException("User not found with id: " + orderDto.getUserId()));
         List<Product> products = getProducts(orderDto.getOrderItems().stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
-        List<OrderItemDto> unavailableProducts = checkAllProductsAvailable(orderDto.getOrderItems());
-        if (!unavailableProducts.isEmpty()) {
-            throw new IllegalArgumentException("The following products are not available: " +
-                    unavailableProducts.stream().map(item -> item.getProductId().toString()).collect(Collectors.joining(", ")) +
-                    ". Please remove them from the order to proceed.");
-        }
+        checkAllProductsAvailable(orderDto.getOrderItems());
 
         Order orderEntity = new Order();
 
@@ -58,18 +54,23 @@ public class OrderService {
         orderEntity.setUser(user);
         orderEntity.setOrderItems(orderItems);
         orderEntity.setTotalPrice(totalPrice);
+        inventoryService.updateInventory(orderItems, null);
         return mapOrderToOrderResponseDto(orderRepository.save(orderEntity));
     }
 
-    public OrderResponseDto editOrderProducts(Integer orderId, List<OrderItemDto> orderItemDtos) {
-        List<Product> products = getProducts(orderItemDtos.stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
+    public OrderResponseDto editOrderProducts(Integer orderId, OrderDto orderDto) {
+        List<Product> products = getProducts(orderDto.getOrderItems().stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
+        checkAllProductsAvailable(orderDto.getOrderItems());
+        List<OrderItem> previousOrderItems = new ArrayList<>();
 
         Order orderEntity = orderRepository.findById(orderId).map(existing -> {
+            previousOrderItems.addAll(existing.getOrderItems());
             existing.getOrderItems().clear();
-            existing.getOrderItems().addAll(mapOrderItemDtosListToOrderItemList(orderItemDtos, existing, products));
+            existing.getOrderItems().addAll(mapOrderItemDtosListToOrderItemList(orderDto.getOrderItems(), existing, products));
             existing.setTotalPrice(calculateTotalPrice(existing.getOrderItems()));
             return orderRepository.save(existing);
         }).orElseThrow(() -> new EntityNotFoundException("Order non found with id" + orderId));
+        inventoryService.updateInventory(orderEntity.getOrderItems(), previousOrderItems);
         return mapOrderToOrderResponseDto(orderEntity);
     }
 
@@ -127,11 +128,17 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public List<OrderItemDto> checkAllProductsAvailable(List<OrderItemDto> orderItems) {
+    public void checkAllProductsAvailable(List<OrderItemDto> orderItems) {
         List<Inventory> inventory = inventoryService.getAvailability(orderItems.stream().map(OrderItemDto::getProductId).collect(Collectors.toList()));
-        return orderItems.stream().filter(item -> {
+        List<OrderItemDto> unavailableProducts = orderItems.stream().filter(item -> {
             Inventory current = inventory.stream().filter(inv -> Objects.equals(inv.getProduct().getId(), item.getProductId())).findFirst().orElse(null);
             return  current == null || current.getQuantity() < item.getQuantity();
-        }).collect(Collectors.toList());
+        }).toList();
+
+        if (!unavailableProducts.isEmpty()) {
+            throw new IllegalArgumentException("The following products are not available or availability is not enough: " +
+                    unavailableProducts.stream().map(item -> item.getProductId().toString()).collect(Collectors.joining(", ")) +
+                    ". Please remove them from the order to proceed.");
+        }
     }
 }

@@ -31,7 +31,7 @@ public class OrderController {
 
     @PatchMapping("/{id}")
     public OrderResponseDto editOrderProducts(@PathVariable Integer id, @Validated({OnUpdate.class, Default.class}) @RequestBody OrderDto orderDto) {
-        return orderService.editOrderProducts(id, orderDto.getOrderItems());
+        return orderService.editOrderProducts(id, orderDto);
     }
 
     @PatchMapping("/status/{id}")
